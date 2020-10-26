@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gate.apps.GateConfig',
+    'django.contrib.gis',
+    'geo.apps.GateConfig',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +78,8 @@ WSGI_APPLICATION = 'EasyWay.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        #  'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -85,6 +87,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'geo.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

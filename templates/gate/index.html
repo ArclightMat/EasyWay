@@ -2,16 +2,17 @@
 {% load static %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'gate/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'gate/leaflet/leaflet.css' %}">
+    <link rel="stylesheet" href="{% static 'gate/index.css' %}">
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'gate/jquery/jquery-3.5.1.min.js' %}"></script>
-    <script src="{% static 'gate/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'gate/leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'gate/loadmap.js' %}"></script>
 {% endblock %}
 
 {% block body %}
-    <p>Hello, world!</p>
+    <div class="container">
+        <div id="map"></div>
+    </div>
 {% endblock %}
