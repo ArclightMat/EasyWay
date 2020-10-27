@@ -8,7 +8,7 @@ class GeoJSONSerializer(View):
     """
     A replacement for Django REST Framework GIS, since it is not working with Django 3.1 + Django REST Framework 3.12
     :param model: A model with GeoDjango fields
-    :param geometru_field: A GeoDjango field type
+    :param geometru_field: A GeoDjango field to be used as the 'geometry' value
     :param fields: Optional, tuple of model fields to be serialized
     """
     model: Model = None

@@ -8,7 +8,7 @@ class Dashboard(TemplateView):
     template_name = "gate/index.html"
 
 
-class AcessibleLocalGeoJSONList(GeoJSONSerializer):
+class AccessibleLocalGeoJSONList(GeoJSONSerializer):
     model = AccessibleLocal
-    geometry_field = 'point'
-    fields = ('name', 'comment', 'location', 'rank')
+    geometry_field = 'location'
+    fields = ('name', 'comment', 'rank')
