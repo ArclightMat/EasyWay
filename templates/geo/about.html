@@ -1,0 +1,23 @@
+{% extends 'geo/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'geo/about.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="about_header">SOBRE NÓS</h2>
+        <p>O EasyWay surgiu através de um trabalho acadêmico, com o intuito de facilitar e auxiliar pessoas com
+            mobilidade reduzida, indicando as melhores rotas, trajetos e avaliações para lugares
+            desejados, por meio de avaliações de usuários.
+            Buscamos desenvolver uma aplicação Web da forma mais intuitiva e coesiva possível, para que o usuário se
+            sinta confortável em utiliza-la com agilidade e praticidade, assim tendo uma maior autonomia.</p>
+        <h2 class="about_header">INSPIRAÇÃO</h2>
+        <p>Temos como principal inspiração a aplicação móvel chamada "Guia de Rodas", que surgiu com o mesmo propósito
+            de
+            inclusão e autonomia para os usuários.
+            Reconhecida pela ONU como uma das melhores aplicações de acessibilidade disponíveis, o Guia de Rodas tem
+            crescido cada vez mais com a inclusão de tecnologia e necessidade de seus usuários.</p>
+    </div>
+{% endblock %}

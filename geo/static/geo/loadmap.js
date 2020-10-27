@@ -1,3 +1,7 @@
+function onEachFeature(feature, layer) {
+    layer.bindPopup(feature.properties.comments);
+}
+
 $.get('/api/locals').done(function (data) {
     let map = L.map('map').setView([-23.550394, -46.633947], 12); // Coords: Marco Zero de SP
     map.locate({setView: true, maxZoom: 15}); // Get current location
@@ -9,6 +13,11 @@ $.get('/api/locals').done(function (data) {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2VtbzR5eiJ9.jQZU37rYZi96-KuO6w8vGw'
     }).addTo(map);
-    L.control.scale().addTo(map)
-
+    L.control.scale().addTo(map);
+    L.geoJSON(data, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng);
+        },
+        onEachFeature: onEachFeature
+    }).addTo(map)
 });
