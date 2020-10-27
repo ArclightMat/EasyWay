@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class GateConfig(AppConfig):
+class GeoConfig(AppConfig):
     name = 'geo'
