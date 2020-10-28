@@ -12,15 +12,106 @@
 {% endblock %}
 
 {% block body %}
+    <!-- COVID Alert -->
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <h4 class="alert-heading">Alerta sobre a COVID-19</h4>
         <hr>
         <p>Devido a pandemia da COVID-19, algumas funcionalidades podem estar indisponíveis! Evite sair sem necessidade,
-            e caso seja necessário, siga as <a class="alert-link" href="https://coronavirus.saude.gov.br/">recomendações do Ministério da Saúde!</a></p>
+            e caso seja necessário, siga as <a class="alert-link" href="https://coronavirus.saude.gov.br/">recomendações
+                do Ministério da Saúde!</a></p>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+
+    <!-- Create Form Modal -->
+    <div class="modal fade" id="createModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Criar novo local</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'create_local' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="create_name">Nome do local:</label>
+                            <input id="name" type="text" name="create_name" class="form-control" required
+                                   maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="create_comments">Descrição do local:</label>
+                            <textarea id="comments" name="create_comments" class="form-control" maxlength="255"
+                                      aria-describedby="helpComments" rows="3"></textarea>
+                            <small id="helpComments" class="form-text text-muted">Detalhes sobre o local e sua
+                                região</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="create_rank">Nível de Acessibilidade:</label>
+                            <select id="rank" class="form-control" name="create_rank">
+                                {% for rank in ranks %}
+                                    <option value={{ rank.id }}>{{ rank.classification }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input id="coords" class="form-control" type="hidden" value="null">
+                            <input id="created_by" class="form-control" type="hidden" value="null">
+                            <button class="btn btn-success" type="submit">Criar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Form Modal -->
+    <div class="modal fade" id="editModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Editar local</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'edit_local' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="create_name">Nome do local:</label>
+                            <input id="name" type="text" name="create_name" class="form-control" required
+                                   maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="create_comments">Descrição do local:</label>
+                            <textarea id="comments" name="create_comments" class="form-control" maxlength="255"
+                                      aria-describedby="helpComments" rows="3"></textarea>
+                            <small id="helpComments" class="form-text text-muted">Detalhes sobre o local e sua
+                                região</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="create_rank">Nível de Acessibilidade:</label>
+                            <select id="rank" class="form-control" name="create_rank">
+                                {% for rank in ranks %}
+                                    <option value={{ rank.id }}>{{ rank.classification }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map -->
     <div class="container">
         <div id="map"></div>
     </div>

@@ -1,5 +1,5 @@
 function onEachFeature(feature, layer) {
-    layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}<hr><strong>Comentários:</strong> ${feature.properties.comments}<br>`);
+    layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}<hr><strong>Descrição:</strong> ${feature.properties.comments}<br>`);
 }
 
 $.get('/api/locals').done(function (data) {
@@ -14,6 +14,14 @@ $.get('/api/locals').done(function (data) {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2VtbzR5eiJ9.jQZU37rYZi96-KuO6w8vGw'
     }).addTo(map);
+    map.on('click', function onMapClick(e) {
+        let popup = L.popup();
+        popup
+            .setLatLng(e.latlng)
+            .setContent('Deseja criar um novo local aqui?<hr><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Criar local</button>')
+            .openOn(map);
+        $('#coords').value = e.latlng;
+    });
     // endregion
     // region icons
     let AccessibilityIcon = L.Icon.extend({
