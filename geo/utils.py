@@ -35,7 +35,8 @@ class GeoJSONSerializer(View):
         return HttpResponse(data, content_type='application/json')
 
     def post(self, request, *args, **kwargs):
-        pass
+        # Creation is being done with Forms
+        return HttpResponse(status=404)
 
     def delete(self, request, *args, **kwargs):
         key = kwargs.get('id', None)

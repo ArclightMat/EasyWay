@@ -13,7 +13,10 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 const csrftoken = getCookie('csrftoken');
+const formaction = document.getElementById('manage_local').action;
+let dirty = false;
 
 function deleteLocal(id) {
     $.ajax({
@@ -28,12 +31,33 @@ function deleteLocal(id) {
     });
 }
 
+function loadForm(id) {
+    $.ajax({
+        url: '/api/locals/' + id,
+        type: 'GET',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        success: function (data) {
+            data = data.features[0]; // Gets first (and only) feature inside the FeatureCollection
+            dirty = true;
+            document.getElementById('manage_local').action = `${formaction}api/edit_local/${id}`;
+            document.getElementById('name').value = data.properties.name;
+            document.getElementById('comments').value = data.properties.comments;
+            document.getElementById('rank').value = data.properties.rank;
+            // GeoJSON coords are lon, lat:
+            document.getElementById('lon').value = data.geometry.coordinates[0];
+            document.getElementById('lat').value = data.geometry.coordinates[1];
+        }
+    });
+}
+
 function onEachFeature(feature, layer) {
     layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}
                     <hr>
                     <strong>Descrição:</strong> ${feature.properties.comments}<br>
                     <hr>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#">Editar</button>
+                    <button type="button" class="btn btn-primary" onclick="loadForm(${feature.properties.pk})" data-toggle="modal" data-target="#createModal">Editar</button>
                     <button type="button" class="btn btn-danger" onclick="deleteLocal(${feature.properties.pk})">Deletar</button>
                     `);
 }
@@ -51,6 +75,11 @@ $.get('/api/locals').done(function (data) {
         accessToken: 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2VtbzR5eiJ9.jQZU37rYZi96-KuO6w8vGw'
     }).addTo(map);
     map.on('click', function onMapClick(e) {
+        if (dirty) {
+            document.getElementById('manage_local').action = formaction;
+            document.getElementById('manage_local').reset();
+            dirty = false;
+        }
         let popup = L.popup();
         popup
             .setLatLng(e.latlng)

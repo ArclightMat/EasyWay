@@ -21,14 +21,22 @@ class Dashboard(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST)
+        key = self.kwargs.get('id', None)
         if form.is_valid():
             # Point: first is longitude, second is latitude.
             location = Point(form.cleaned_data['lng'], form.cleaned_data['lat'])
-            entry = AccessibleLocal.objects.create(name=form.cleaned_data['name'],
-                                                   comments=form.cleaned_data['comments'],
-                                                   location=location,
-                                                   rank=form.cleaned_data['rank'],
-                                                   created_by_id=1)  # TODO: Placeholder value, replace with User
+            if key is None:
+                entry = AccessibleLocal.objects.create(name=form.cleaned_data['name'],
+                                                       comments=form.cleaned_data['comments'],
+                                                       location=location,
+                                                       rank=form.cleaned_data['rank'],
+                                                       created_by_id=1)  # TODO: Placeholder value, replace with User
+            else:
+                entry = AccessibleLocal.objects.get(id=key)
+                entry.name = form.cleaned_data['name']
+                entry.comments=form.cleaned_data['comments']
+                entry.location = location
+                entry.rank = form.cleaned_data['rank']
             entry.save()
             return redirect('index')
         args = {

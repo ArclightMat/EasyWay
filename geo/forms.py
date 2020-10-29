@@ -36,5 +36,5 @@ class AccessibleLocalForm(forms.ModelForm):
                 Field('lng', type='hidden', id='lon'),
                 id='div_id_coords'
                 ),
-            Submit('criar', 'Criar', css_class='btn-success')
+            Submit('save', 'Salvar', css_class='btn-success')
         )
