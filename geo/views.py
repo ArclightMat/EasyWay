@@ -1,18 +1,38 @@
-from django.shortcuts import render
+from django.contrib.gis.geos import Point
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
 from geo.utils import GeoJSONSerializer
-from .models import AccessibleLocal, Rank
+from .forms import AccessibleLocalForm
+from .models import AccessibleLocal
 
 
 # region Frontend
 class Dashboard(TemplateView):
     template_name = "geo/index.html"
+    form = AccessibleLocalForm
 
     def get(self, request, *args, **kwargs):
-        ranks = Rank.objects.all()
+        form = self.form()
         args = {
-            'ranks': ranks
+            'form': form
+        }
+        return render(request=request, template_name=self.template_name, context=args)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if form.is_valid():
+            # Point: first is longitude, second is latitude.
+            location = Point(form.cleaned_data['lng'], form.cleaned_data['lat'])
+            entry = AccessibleLocal.objects.create(name=form.cleaned_data['name'],
+                                                   comments=form.cleaned_data['comments'],
+                                                   location=location,
+                                                   rank=form.cleaned_data['rank'],
+                                                   created_by_id=1)  # TODO: Placeholder value, replace with User
+            entry.save()
+            return redirect('index')
+        args = {
+            'form': form
         }
         return render(request=request, template_name=self.template_name, context=args)
 
