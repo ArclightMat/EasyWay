@@ -7,8 +7,8 @@ from geo.models import AccessibleLocal
 
 
 class AccessibleLocalForm(forms.ModelForm):
-    lat = forms.FloatField(required=True, min_value=-90, max_value=90)
-    lng = forms.FloatField(required=True, min_value=-180, max_value=180)
+    lat = forms.FloatField(required=True, min_value=-90, max_value=90)  # Latitude: -90° to 90°
+    lng = forms.FloatField(required=True, min_value=-180, max_value=180)  # Longitude: -180° to 180°
 
     class Meta:
         model = AccessibleLocal

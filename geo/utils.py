@@ -1,5 +1,6 @@
 from django.db.models import Model
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.shortcuts import redirect
 from django.views.generic import View
 from django.core.serializers import serialize
 
@@ -18,12 +19,28 @@ class GeoJSONSerializer(View):
     def get(self, request, *args, **kwargs):
         assert self.model is not None
         assert self.geometry_field is not None
+        key = kwargs.get('id', None)
         if self.fields is None:
-            data = serialize('geojson', self.model.objects.all(), geometry_field=self.geometry_field,
-                             fields=self.fields)
+            if key is not None:
+                data = serialize('geojson', self.model.objects.filter(id=key), geometry_field=self.geometry_field,
+                                 fields=self.fields)
+            else:
+                data = serialize('geojson', self.model.objects.filter(is_active=True), geometry_field=self.geometry_field,
+                                 fields=self.fields)
         else:
-            data = serialize('geojson', self.model.objects.all(), geometry_field=self.geometry_field)
+            if key is not None:
+                data = serialize('geojson', self.model.objects.filter(id=key), geometry_field=self.geometry_field)
+            else:
+                data = serialize('geojson', self.model.objects.filter(is_active=True), geometry_field=self.geometry_field)
         return HttpResponse(data, content_type='application/json')
 
     def post(self, request, *args, **kwargs):
         pass
+
+    def delete(self, request, *args, **kwargs):
+        key = kwargs.get('id', None)
+        if key is not None:
+            data = self.model.objects.get(id=key)
+            data.is_active = False
+            data.save()
+        return HttpResponse(status=204)
