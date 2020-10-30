@@ -1,0 +1,23 @@
+{% extends 'geo/base.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="container h-100">
+        {% if user.is_authenticated %}
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    window.location.replace("{% url 'index' %}");
+                });
+            </script>
+        {% endif %}
+        {% if form.errors %}
+            <p class="text-center text-warning">Dados inválidos</p>
+        {% endif %}
+        <div class="row h-100 justify-content-center align-items-center">
+            {% load crispy_forms_tags %}
+            {% crispy form %}
+        </div>
+
+
+    </div>
+{% endblock %}

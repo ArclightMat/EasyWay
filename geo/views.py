@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import Point
 from django.shortcuts import render, redirect
@@ -5,7 +6,7 @@ from django.views.generic import TemplateView
 from rest_framework.generics import RetrieveUpdateAPIView
 
 from geo.utils import GeoJSONSerializer, UserSerializer
-from .forms import AccessibleLocalForm
+from .forms import AccessibleLocalForm, RegisterForm
 from .models import AccessibleLocal
 
 
@@ -41,6 +42,30 @@ class Dashboard(TemplateView):
                 entry.location = location
                 entry.rank = form.cleaned_data['rank']
             entry.save()
+            return redirect('index')
+        args = {
+            'form': form
+        }
+        return render(request=request, template_name=self.template_name, context=args)
+
+
+class Register(TemplateView):
+    template_name = "registration/signup.html"
+    form = RegisterForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form()
+        args = {
+            'form': form
+        }
+        return render(request=request, template_name=self.template_name, context=args)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if form.is_valid():
+            form.save()
+            user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password1'))
+            login(request, user)
             return redirect('index')
         args = {
             'form': form

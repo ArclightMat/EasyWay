@@ -2,8 +2,9 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Div
 from django.contrib.gis import forms
 from django.forms.widgets import Textarea
+from django.contrib.auth.forms import UserCreationForm
 
-from geo.models import AccessibleLocal
+from geo.models import AccessibleLocal, User
 
 
 class AccessibleLocalForm(forms.ModelForm):
@@ -38,3 +39,24 @@ class AccessibleLocalForm(forms.ModelForm):
                 ),
             Submit('save', 'Salvar', css_class='btn-success')
         )
+
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        labels = {
+            'email': 'Endereço de email',
+            'first_name': 'Nome',
+            'last_name': 'Sobrenome',
+            'password1': 'Senha',
+            'password2': 'Confirmar senha',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'signup'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'signup'
+        self.helper.add_input(Submit('save', 'Cadastrar', css_class='btn-success'))
