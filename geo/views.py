@@ -49,6 +49,10 @@ class About(TemplateView):
     template_name = "geo/about.html"
 
 
+class Help(TemplateView):
+    template_name = "geo/help.html"
+
+
 class Login(TemplateView):
     template_name = "geo/login.html"
 

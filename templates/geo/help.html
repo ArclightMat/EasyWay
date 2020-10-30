@@ -1,0 +1,29 @@
+{% extends 'geo/base.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <img class="d-block mx-auto easyway_logo" src="{% static 'geo/images/EasyWay.svg' %}" width=128 height=128
+             alt="EasyWay Logo">
+        <h2 class="easyway_header bg-success">COMO USAR</h2>
+        <p>Clique no local do mapa desejado para criar um ponto. Para criar um ponto, é necessário inserir nome,
+            descrição e classificação para ele. Para saber mais sobre as classificações, clique <a href="#rank">aqui.</a>
+        </p>
+        <p>Para alterar ou deletar um local criado, clique no ponto existente e utilize os botões de editar ou deletar.
+            As mesmas regras utilizadas na criação são obrigatórias nas edições. Caso tenha deletado um local por
+            engano, entre em contato conoscos para podermos restaurá-lo.</p>
+        <p>Para traçar uma rota até o local, clique no ponto e selecione a opção "Ir". Para a rota ser traçada
+            automaticamente, é necessário dar permissão de localização. Caso não tenha dado a permissão, por favor,
+            insira o endereço na janela ao topo do mapa.</p>
+        <h2 id="rank" class="easyway_header bg-success">LEGENDA</h2>
+        <p><img src="{% static 'geo/images/Accessibility_BLUE.svg' %}" width=48 height=48 alt="Cadeirante Azul">Este ícone representa um local
+            totalmente acessível para um deficiente físico. É ideal para locais com
+            rampas, elevadores, e acessos especiais cujo arredores também são acessíveis.</p>
+        <p><img src="{% static 'geo/images/Accessibility_YELLOW.svg' %}" width=48 height=48 alt="Cadeirante Amarelo">Este ícone representa um
+            local parcialmente acessível para um deficiente físico. É ideal para locais com
+            alguns itens de acessibilidade ou com arredores não apropriados para deficientes físicos.</p>
+        <p><img src="{% static 'geo/images/Accessibility_RED.svg' %}" width=48 height=48 alt="Cadeirante Vermelho">Este ícone representa um local
+            inacessível para um deficiente físico. É ideal para locais sem itens de
+            acessibilidade e com arredores não apropriados para deficientes físicos.</p>
+    </div>
+{% endblock %}

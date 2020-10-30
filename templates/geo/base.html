@@ -10,6 +10,7 @@
 
     <!-- region CSS -->
     <link rel="stylesheet" href="{% static 'geo/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'geo/easyway.css' %}">
     <!-- Fallback Favicon -->
     <link rel="icon" type="image/png" href="{% static 'geo/images/EasyWay_whitebg.png' %}">
     <!-- Favicon -->
@@ -39,6 +40,11 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'help' %}">Ajuda</a>
                 </li>
             </ul>
             <ul class="navbar-nav">

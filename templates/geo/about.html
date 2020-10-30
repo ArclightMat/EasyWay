@@ -1,20 +1,16 @@
 {% extends 'geo/base.html' %}
 {% load static %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{% static 'geo/about.css' %}">
-{% endblock %}
-
 {% block body %}
     <div class="container">
-        <img class="d-block mx-auto about_img" src="{% static 'geo/images/EasyWay.svg' %}" width=128 height=128 alt="EasyWay Logo">
-        <h2 class="about_header bg-success">SOBRE NÓS</h2>
+        <img class="d-block mx-auto easyway_logo" src="{% static 'geo/images/EasyWay.svg' %}" width=128 height=128 alt="EasyWay Logo">
+        <h2 class="easyway_header bg-success">SOBRE NÓS</h2>
         <p>O EasyWay surgiu através de um trabalho acadêmico, com o intuito de facilitar e auxiliar pessoas com
             mobilidade reduzida, indicando as melhores rotas, trajetos e avaliações para lugares
             desejados, por meio de avaliações de usuários.
             Buscamos desenvolver uma aplicação Web da forma mais intuitiva e coesiva possível, para que o usuário se
             sinta confortável em utiliza-la com agilidade e praticidade, assim tendo uma maior autonomia.</p>
-        <h2 class="about_header bg-success">INSPIRAÇÃO</h2>
+        <h2 class="easyway_header bg-success">INSPIRAÇÃO</h2>
         <p>Temos como principal inspiração a aplicação móvel chamada "Guia de Rodas", que surgiu com o mesmo propósito
             de
             inclusão e autonomia para os usuários.
