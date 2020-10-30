@@ -1,21 +1,7 @@
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
 const csrftoken = getCookie('csrftoken');
 const formaction = document.getElementById('manage_local').action;
+const apikey = 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2VtbzR5eiJ9.jQZU37rYZi96-KuO6w8vGw';
+let control, map, current_latlng;
 let dirty = false;
 
 function deleteLocal(id) {
@@ -48,8 +34,32 @@ function loadForm(id) {
             // GeoJSON coords are lon, lat:
             document.getElementById('lon').value = data.geometry.coordinates[0];
             document.getElementById('lat').value = data.geometry.coordinates[1];
+            map.closePopup();
         }
     });
+}
+
+function onLocationFound(e) {
+    current_latlng = e.latlng;
+}
+
+function setRoute(id) {
+    $.ajax({
+        url: '/api/locals/' + id,
+        type: 'GET',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        success: function (data) {
+            data = data.features[0]; // Gets first (and only) feature inside the FeatureCollection
+            let latlng = {'lat': data.geometry.coordinates[1], 'lng': data.geometry.coordinates[0]};
+            if (current_latlng !== undefined)
+                control.spliceWaypoints(0, 1, current_latlng);
+            control.spliceWaypoints(1, 1, latlng);
+            map.closePopup();
+        }
+    });
+
 }
 
 function onEachFeature(feature, layer) {
@@ -57,22 +67,24 @@ function onEachFeature(feature, layer) {
                     <hr>
                     <strong>Descrição:</strong> ${feature.properties.comments}<br>
                     <hr>
-                    <button type="button" class="btn btn-primary" onclick="loadForm(${feature.properties.pk})" data-toggle="modal" data-target="#createModal">Editar</button>
+                    <button type="button" class="btn btn-primary" onclick="setRoute(${feature.properties.pk})">Ir</button>
+                    <button type="button" class="btn btn-warning" onclick="loadForm(${feature.properties.pk})" data-toggle="modal" data-target="#createModal">Editar</button>
                     <button type="button" class="btn btn-danger" onclick="deleteLocal(${feature.properties.pk})">Deletar</button>
                     `);
 }
 
 $.get('/api/locals').done(function (data) {
     // region init
-    let map = L.map('map').setView([-23.550394, -46.633947], 12); // Coords: Marco Zero de SP
+    map = L.map('map').setView([-23.550394, -46.633947], 12); // Coords: Marco Zero de SP
     map.locate({setView: true, maxZoom: 15}); // Get current location
+    map.on('locationfound', onLocationFound);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Dados do Mapa: &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagens por: © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox/streets-v11',
         tileSize: 512,
         zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2VtbzR5eiJ9.jQZU37rYZi96-KuO6w8vGw'
+        accessToken: apikey
     }).addTo(map);
     map.on('click', function onMapClick(e) {
         if (dirty) {
@@ -88,6 +100,11 @@ $.get('/api/locals').done(function (data) {
         document.getElementById('lat').value = e.latlng.lat;
         document.getElementById('lon').value = e.latlng.lng;
     });
+    control = L.Routing.control({
+        router: L.Routing.mapbox(apikey),
+        geocoder: L.Control.Geocoder.mapbox(apikey),
+        waypoints: [null]
+    }).addTo(map);
     // endregion
     // region icons
     let AccessibilityIcon = L.Icon.extend({
@@ -96,9 +113,9 @@ $.get('/api/locals').done(function (data) {
             popupAnchor: [0, 10]
         }
     })
-    let blueIcon = new AccessibilityIcon({iconUrl: '/static/generic/Accessibility_BLUE.svg'});
-    let yellowIcon = new AccessibilityIcon({iconUrl: '/static/generic/Accessibility_YELLOW.svg'});
-    let redIcon = new AccessibilityIcon({iconUrl: '/static/generic/Accessibility_RED.svg'});
+    let blueIcon = new AccessibilityIcon({iconUrl: '/static/geo/images/Accessibility_BLUE.svg'});
+    let yellowIcon = new AccessibilityIcon({iconUrl: '/static/geo/images/Accessibility_YELLOW.svg'});
+    let redIcon = new AccessibilityIcon({iconUrl: '/static/geo/images/Accessibility_RED.svg'});
     // endregion
 
     L.control.scale().addTo(map);

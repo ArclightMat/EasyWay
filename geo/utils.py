@@ -38,6 +38,10 @@ class GeoJSONSerializer(View):
         # Creation is being done with Forms
         return HttpResponse(status=404)
 
+    def patch(self, request, *args, **kwargs):
+        # Editing is being done with Forms
+        return HttpResponse(status=404)
+
     def delete(self, request, *args, **kwargs):
         key = kwargs.get('id', None)
         if key is not None:

@@ -3,12 +3,16 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'geo/leaflet/leaflet.css' %}">
+    <link rel="stylesheet" href="{% static 'geo/leaflet-control-geocoder/Control.Geocoder.css' %}">
+    <link rel="stylesheet" href="{% static 'geo/leaflet-routing-machine/leaflet-routing-machine.css' %}">
     <link rel="stylesheet" href="{% static 'geo/index.css' %}">
 {% endblock %}
 
 {% block scripts %}
     <script src="{% static 'geo/leaflet/leaflet.js' %}"></script>
-    <script src="{% static 'geo/loadmap.js' %}"></script>
+    <script src="{% static 'geo/leaflet-control-geocoder/Control.Geocoder.js' %}"></script>
+    <script src="{% static 'geo/leaflet-routing-machine/leaflet-routing-machine.js' %}"></script>
+    <script src="{% static 'geo/map_config.js' %}"></script>
 {% endblock %}
 
 {% block body %}
