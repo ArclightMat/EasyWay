@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import Point
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from rest_framework.generics import RetrieveUpdateAPIView
 
-from geo.utils import GeoJSONSerializer
+from geo.utils import GeoJSONSerializer, UserSerializer
 from .forms import AccessibleLocalForm
 from .models import AccessibleLocal
 
@@ -19,6 +21,7 @@ class Dashboard(TemplateView):
         }
         return render(request=request, template_name=self.template_name, context=args)
 
+    @login_required
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST)
         key = self.kwargs.get('id', None)
@@ -30,11 +33,11 @@ class Dashboard(TemplateView):
                                                        comments=form.cleaned_data['comments'],
                                                        location=location,
                                                        rank=form.cleaned_data['rank'],
-                                                       created_by_id=1)  # TODO: Placeholder value, replace with User
+                                                       created_by=request.user)
             else:
                 entry = AccessibleLocal.objects.get(id=key)
                 entry.name = form.cleaned_data['name']
-                entry.comments=form.cleaned_data['comments']
+                entry.comments = form.cleaned_data['comments']
                 entry.location = location
                 entry.rank = form.cleaned_data['rank']
             entry.save()
@@ -53,10 +56,6 @@ class Help(TemplateView):
     template_name = "geo/help.html"
 
 
-class Login(TemplateView):
-    template_name = "geo/login.html"
-
-
 # endregion
 
 # region APIs
@@ -64,4 +63,9 @@ class AccessibleLocalGeoJSONList(GeoJSONSerializer):
     model = AccessibleLocal
     geometry_field = 'location'
     fields = ('name', 'comment', 'rank')
+
+
+class UserSerializerController(RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    queryset = serializer_class.Meta.model.objects.filter(is_active=True)
 # endregion

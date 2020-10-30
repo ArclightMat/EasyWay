@@ -4,6 +4,21 @@ const apikey = 'pk.eyJ1IjoiYXJjbGlnaHRtYXQiLCJhIjoiY2tncHV5d2F0MWJoYTJxcDl2d2Vtb
 let control, map, current_latlng;
 let dirty = false;
 
+function hideAlert(id) {
+    if (id !== undefined) {
+        $.ajax({
+            url: 'api/user/' + id,
+            type: 'PATCH',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {
+                'show_alerts': false,
+            },
+        })
+    }
+}
+
 function deleteLocal(id) {
     $.ajax({
         url: '/api/locals/' + id,
@@ -63,7 +78,16 @@ function setRoute(id) {
 }
 
 function onEachFeature(feature, layer) {
-    layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}
+    if (user === undefined)
+        layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}
+                    <hr>
+                    <strong>Descrição:</strong> ${feature.properties.comments}<br>
+                    <hr>
+                    <button type="button" class="btn btn-primary" onclick="setRoute(${feature.properties.pk})">Ir</button>
+                    `);
+
+    else
+        layer.bindPopup(`<strong>Nome do local:</strong> ${feature.properties.name}
                     <hr>
                     <strong>Descrição:</strong> ${feature.properties.comments}<br>
                     <hr>
@@ -93,10 +117,16 @@ $.get('/api/locals').done(function (data) {
             dirty = false;
         }
         let popup = L.popup();
-        popup
-            .setLatLng(e.latlng)
-            .setContent('Deseja criar um novo local aqui?<hr><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Criar local</button>')
-            .openOn(map);
+        if (user === undefined)
+            popup
+                .setLatLng(e.latlng)
+                .setContent('Para criar um novo local, faça login.')
+                .openOn(map);
+        else
+            popup
+                .setLatLng(e.latlng)
+                .setContent('Deseja criar um novo local aqui?<hr><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Criar local</button>')
+                .openOn(map);
         document.getElementById('lat').value = e.latlng.lat;
         document.getElementById('lon').value = e.latlng.lng;
     });

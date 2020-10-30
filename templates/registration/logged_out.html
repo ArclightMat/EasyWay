@@ -1,0 +1,10 @@
+{% extends 'geo/base.html' %}
+{% load static %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            window.location.replace("{% url 'index' %}");
+        });
+    </script>
+{% endblock %}

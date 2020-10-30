@@ -1,0 +1,30 @@
+{% extends 'geo/base.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="container h-100">
+        {% if form.errors %}
+            <p class="text-center">Nome de usuário ou senha incorretos.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>Sua conta não possuí acesso, entre com outro usuário</p>
+            {% else %}
+                <p>Faça login para acessar esta página.</p>
+            {% endif %}
+        {% endif %}
+        <div class="row h-100 justify-content-center align-items-center">
+            {% load crispy_forms_tags %}
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <button type="submit" value="login" class="btn btn-success">Login</button>
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+        </div>
+
+
+    </div>
+{% endblock %}

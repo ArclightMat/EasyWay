@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class User(AbstractUser):
-    pass
+    show_alerts = models.BooleanField(default=True)
 
 
 class Rank(models.Model):

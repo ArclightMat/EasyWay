@@ -1,8 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Model
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
-from django.shortcuts import redirect
+from django.http import HttpResponse
 from django.views.generic import View
 from django.core.serializers import serialize
+from rest_framework import serializers
+
+from geo.models import User
 
 
 class GeoJSONSerializer(View):
@@ -25,13 +28,15 @@ class GeoJSONSerializer(View):
                 data = serialize('geojson', self.model.objects.filter(id=key), geometry_field=self.geometry_field,
                                  fields=self.fields)
             else:
-                data = serialize('geojson', self.model.objects.filter(is_active=True), geometry_field=self.geometry_field,
+                data = serialize('geojson', self.model.objects.filter(is_active=True),
+                                 geometry_field=self.geometry_field,
                                  fields=self.fields)
         else:
             if key is not None:
                 data = serialize('geojson', self.model.objects.filter(id=key), geometry_field=self.geometry_field)
             else:
-                data = serialize('geojson', self.model.objects.filter(is_active=True), geometry_field=self.geometry_field)
+                data = serialize('geojson', self.model.objects.filter(is_active=True),
+                                 geometry_field=self.geometry_field)
         return HttpResponse(data, content_type='application/json')
 
     def post(self, request, *args, **kwargs):
@@ -42,6 +47,7 @@ class GeoJSONSerializer(View):
         # Editing is being done with Forms
         return HttpResponse(status=404)
 
+    @login_required
     def delete(self, request, *args, **kwargs):
         key = kwargs.get('id', None)
         if key is not None:
@@ -49,3 +55,10 @@ class GeoJSONSerializer(View):
             data.is_active = False
             data.save()
         return HttpResponse(status=204)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'show_alerts']
+        read_only_fields = ['id']

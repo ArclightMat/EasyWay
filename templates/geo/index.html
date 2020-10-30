@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block body %}
+    {% if not user.is_authenticated or user.show_alerts %}
     <!-- COVID Alert -->
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <h4 class="alert-heading">Alerta sobre a COVID-19</h4>
@@ -23,10 +24,11 @@
         <p>Devido a pandemia da COVID-19, algumas funcionalidades podem estar indisponíveis! Evite sair sem necessidade,
             e caso seja necessário, siga as <a class="alert-link" href="https://coronavirus.saude.gov.br/">recomendações
                 do Ministério da Saúde!</a></p>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="hideAlert(user)">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    {% endif %}
 
     <!-- Form Modal -->
     <div class="modal fade" id="createModal" data-backdrop="static" data-keyboard="false" tabindex="-1"

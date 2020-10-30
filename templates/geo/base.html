@@ -24,7 +24,8 @@
 <header>
     <nav class="navbar navbar-dark bg-success navbar-expand-md sticky-top">
         <a class="navbar-brand" href="{% url 'index' %}">
-            <img src="{% static 'geo/images/EasyWay.svg' %}" class="d-inline-block align-top" width="32" height="32" alt="">
+            <img src="{% static 'geo/images/EasyWay.svg' %}" class="d-inline-block align-top" width="32" height="32"
+                 alt="">
             EasyWay
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -39,11 +40,6 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
                     <a class="nav-link" href="{% url 'help' %}">Ajuda</a>
                 </li>
             </ul>
@@ -52,17 +48,37 @@
                     <a class="nav-link" href="{% url 'about' %}">Sobre nós</a>
                 </li>
             </ul>
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                </ul>
+            {% endif %}
+
         </div>
     </nav>
 </header>
 {% block body %}
 {% endblock %}
 <footer class="footer mt-auto py-3 text-center">
-  <div class="container">
-    <span>&copy; {% now 'Y' %} EasyWay. Todos os direitos reservados.</span>
-  </div>
+    <div class="container">
+        <span>&copy; {% now 'Y' %} EasyWay. Todos os direitos reservados.</span>
+    </div>
 </footer>
 <!-- region JS -->
+{% if user.is_authenticated %}
+    <script>var user = {{ user.id }}</script>
+{% else %}
+    <script>var user = undefined;</script>
+{% endif %}
+
 <script src="{% static 'getCookie.js' %}"></script>
 <script src="{% static 'geo/jquery/jquery-3.5.1.min.js' %}"></script>
 <script src="{% static 'geo/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
