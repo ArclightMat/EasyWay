@@ -22,7 +22,6 @@ class Dashboard(TemplateView):
         }
         return render(request=request, template_name=self.template_name, context=args)
 
-    @login_required
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST)
         key = self.kwargs.get('id', None)
